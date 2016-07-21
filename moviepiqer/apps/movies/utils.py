@@ -15,7 +15,7 @@ base_data = {
 def makeRequest(url, data=base_data, headers=base_headers):
   params = urlencode(data)
   request = Request(url+params, headers=headers)
-  print url+"/?"+params
+  print url+"?"+params
   return urlopen(request).read()
 
 def getAllGenres():
