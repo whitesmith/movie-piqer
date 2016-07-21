@@ -1,4 +1,7 @@
 from django.http import HttpResponse
+from django.template import loader
 
 def index(request):
-  return HttpResponse("Hello, World.")
+  template = loader.get_template('movies/index.html')
+  context = {}
+  return HttpResponse(template.render(context, request))
