@@ -1,4 +1,6 @@
-from urllib.request import Request, urlopen
+#-*- encoding: latin-1 -*-
+
+from urllib2 import Request, urlopen
 import re
 
 headers = {

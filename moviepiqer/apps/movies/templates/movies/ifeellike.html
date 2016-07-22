@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css.custom %}
+{% endblock css.custom %}
+
+{% block content %}
+<div class="container">
+  <h2>{{ result.original_title }}</h2>
+  <div class="row">
+    <div class="col-sm-6" id="poster">
+      <img src="{{ poster }}" class="img-responsive center-block" />
+      <blockquote>
+        <p>{{ result.tagline }}</p>
+      </blockquote>
+    </div>
+    <div class="col-sm-6">
+      <p class="lead">Plot</p>
+      <p>{{ result.overview }}</p>
+      <a class="btn btn-default" href="http://www.imdb.com/title/{{ result.imdb_id }}" target="_blank" id="imdb">IMDB page</a>
+      <p class="lead">Trailer</p>
+      <div class="embed-responsive embed-responsive-16by9" id=trailer>
+        <iframe class="embed-responsive-item" src="{{ trailer }}"></iframe>
+      </div>
+      <p class="lead">Featured images</p>
+      <div class="row">
+        {% for image in images %}
+        <div class="col-sm-6">
+          <img src="https://image.tmdb.org/t/p/w185{{ image.file_path }}" class="img-responsive block-center" />
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block js.custom %}
+{% endblock js.custom %}

@@ -48,3 +48,9 @@ def discoverMovie(genres=[],rating=0.0,cast=[],crew=[]):
       data['with_crew'] = data['with_crew']+str(person)+","
   data['sort_by'] = 'popularity.desc'
   return json.loads(makeRequest(url, data=data))
+
+def getMovieInfo(id):
+  url = base_url+"movie/"+str(id)
+  data = base_data.copy()
+  data['append_to_response'] = 'images'
+  return json.loads(makeRequest(url, data=data))

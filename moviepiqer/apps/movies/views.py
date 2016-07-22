@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import redirect
 import utils
+import get
 import json
 from datetime import datetime as dt
 
@@ -46,5 +47,28 @@ def results(request):
   context = {
     'results' : results,
     'genres' : allGenres,
+  }
+  return HttpResponse(template.render(context, request))
+
+def ifeellike(request):
+  if request.method != "POST" or not request.POST.has_key('id'):
+    return redirect('/', permanent=True)
+
+  tmdbid = request.POST['id']
+  result = utils.getMovieInfo(tmdbid)
+
+  slug = get.tmdb2slug(tmdbid)
+  poster = get.get_poster_image(slug)
+  trailer = get.get_movie_trailer(slug).replace('watch?v=','embed/')
+  images = result['images']['posters']
+  if len(images)>4:
+    images = images[0:4]
+
+  template = loader.get_template('movies/ifeellike.html')
+  context = {
+    'result': result,
+    'poster': poster,
+    'trailer': trailer,
+    'images': images,
   }
   return HttpResponse(template.render(context, request))

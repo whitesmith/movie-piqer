@@ -21,14 +21,28 @@
           <br />
           <p class="lead">Release date</p>
           <p>{{ result.release_date }}</p>
+          <button class="btn btn-default accept pull-right" id="{{ result.id }}">Accept</button>
         </div>
       </div>
     </div>
   </div>
   {% endfor %}
 </div>
+<form id="hiddenForm" method="POST" action="{% url 'movies:ifeellike' %}">
+  {% csrf_token %}
+</form>
 {% endblock content %}
 
 {% block js.custom %}
-
+<script type="text/javascript">
+  $('.accept').click(function(){
+      var form = $("#hiddenForm");
+      var field = $('<input></input>');
+      field.attr('type','hidden');
+      field.attr('name','id');
+      field.attr('value',$(this).attr('id'));
+      form.append(field);
+      $(form).submit();
+  });
+</script>
 {% endblock js.custom %}
