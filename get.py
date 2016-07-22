@@ -229,11 +229,10 @@ def get_movie_rating(slug):
 	# Metacritic
 	imdb_id = slug2imdb(slug, 'movie')
 	#print(imdb_id)
-	request = Request('http://www.omdbapi.com/?i='+imdb_id+'&r=json', headers=headers)
+	request = Request('http://www.omdbapi.com/?i='+imdb_id+'&r=json&tomatoes=true', headers=headers)
 	response_body = str(urlopen(request).read())
-	#print(response_body)
+	print(response_body)
 	meta_p = re.findall(r"""("Metascore":\"(?P<meta>[^"]*)\")""", response_body)
-	#print(meta_p)
 	meta   = str(list(meta_p[0])[1])
 
 
@@ -242,8 +241,16 @@ def get_movie_rating(slug):
 	#print(trakt_p)
 	imdb   = str(list(imdb_p[0])[1])
 
+	# Rotten Tomatoes
+	tomatu_p = re.findall(r"""("tomatoUserMeter":\"(?P<tomat>[^"]*)\")""", response_body)
+	tomatu   = str(list(tomatu_p[0])[1])
 
-	return trakt, meta, imdb
+	tomatc_p = re.findall(r"""("tomatoMeter":\"(?P<tomat>[^"]*)\")""", response_body)
+	tomatc   = str(list(tomatc_p[0])[1])
+
+
+
+	return trakt, meta, imdb, tomatu, tomatc
 
 def get_genre_list():
 
@@ -304,6 +311,9 @@ def get_popular():
 
 	return movie_slugs
 
+
+print(get_movie_rating('terminator-genisys-2015'))
+
 #print(get_in_theatres())
 #print(get_popular())
 
@@ -315,7 +325,6 @@ def get_popular():
 # plt.show()
 # n, bins, patches = plt.hist(r3, 50, normed=1, facecolor='green', alpha=0.75)
 # plt.show()
-
 
 #print(get_random_slug())
 
