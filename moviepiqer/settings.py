@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '=pc6fep3j0*k-2%$h#hwv=cm6zzqm&vin=%2k9g%(mpp%kf1ae'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost','movie-piqer.herokuapp.com','www.movie-piqer.herokuapp.com','moviepiqer.top','www.moviepiqer.top']
 
 
 # Application definition

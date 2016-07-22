@@ -91,3 +91,21 @@ def getcastcrewrating(request):
   }
 
   return HttpResponse(json.dumps(data))
+
+def getrelated(request):
+  if request.method != "POST" or not request.POST.has_key('slug'):
+    return redirect('/', permanent=True)
+
+  slug = request.POST['slug']
+  all_counts, all_slugs, all_movies = get.get_related(slug)
+  ids = [get.slug2tmdb(x,'movie') for x in all_slugs]
+  posters = [get.get_poster_image(x) for x in all_slugs]
+  titles = all_movies
+
+  data = {
+    'ids': ids,
+    'posters': posters,
+    'titles': titles,
+  }
+
+  return HttpResponse(json.dumps(data))

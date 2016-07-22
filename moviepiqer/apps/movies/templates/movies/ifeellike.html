@@ -2,6 +2,20 @@
 {% load static %}
 
 {% block css.custom %}
+<style type="text/css">
+#firstline, #secondline, #thirdline {
+  width: 100%;
+}
+.firstlineitem {
+  width: 33%;
+}
+.secondlineitem {
+  width: 20%;
+}
+.thirdlineitem {
+  width: 14%;
+}
+</style>
 {% endblock css.custom %}
 
 {% block content %}
@@ -41,7 +55,13 @@
       <div id="rating"></div>
     </div>
   </div>
+  <div class="row" id="firstline"></div>
+  <div class="row" id="secondline"></div>
+  <div class="row" id="thirdline"></div>
   <form id="hiddenCastForm" method="POST" action="{% url 'movies:getcastcrewrating' %}">
+    {% csrf_token %}
+  </form>
+  <form id="hiddenRelatedForm" method="POST" action="{% url 'movies:getrelated' %}">
     {% csrf_token %}
   </form>
 </div>
@@ -61,13 +81,36 @@
         $("#crew").append("<div class=\"col-sm-2\"><img class=\"img-responsive\" src=\"" + data['crew'][i] + "\" /></div>");
       }
 
-      console.log(data['rating']);
       $("#rating").append("<p class=\"lead\">Rating</p>");
       $("#rating").append("<p>Trakt.tv: "+data['rating'][0]+"</p>");
       $("#rating").append("<p>Metacritic: "+data['rating'][1]+"</p>");
       $("#rating").append("<p>IMDB: "+data['rating'][2]+"</p>");
       $("#rating").append("<p>Rotten Tomatoes users: "+data['rating'][3]+"</p>");
       $("#rating").append("<p>Rotten Tomatoes critics: "+data['rating'][4]+"</p>");
+    }, "json");
+
+    $.post("{% url 'movies:getrelated' %}", {slug: "{{ slug }}", csrfmiddlewaretoken: $("#hiddenRelatedForm input[name=csrfmiddlewaretoken]").val()}, function(data){
+      $ids = data['ids'];
+      $posters = data['posters'];
+      $titles = data['titles'];
+
+      if ($ids.length > 3) {
+        for (var i = 1; i < 4; i++) {
+          $("#firstline").append("<img class=\"firstlineitem img-responsive\" id=\"" + $ids[i] + "\"src=\"" + $posters[i] + "\" />");
+        }
+      }
+
+      if ($ids.length > 8) {
+        for (var i = 4; i < 8; i++) {
+          $("#firstline").append("<img class=\"firstlineitem img-responsive\" id=\"" + $ids[i] + "\"src=\"" + $posters[i] + "\" />");
+        }
+      }
+
+      if ($ids.length > 15) {
+        for (var i = 8; i < 15; i++) {
+          $("#firstline").append("<img class=\"firstlineitem img-responsive\" id=\"" + $ids[i] + "\"src=\"" + $posters[i] + "\" />");
+        }
+      }
     }, "json");
   });
 </script>

@@ -8,4 +8,5 @@ urlpatterns = [
   url(r'^results$', views.results, name='results'),
   url(r'^ifeellike$', views.ifeellike, name='ifeellike'),
   url(r'^getcastcrewrating$', views.getcastcrewrating, name='getcastcrewrating'),
+  url(r'^getrelated$', views.getrelated, name='getrelated'),
 ]
