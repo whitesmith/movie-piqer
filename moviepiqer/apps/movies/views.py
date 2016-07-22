@@ -63,7 +63,6 @@ def ifeellike(request):
   images = result['images']['posters']
   if len(images)>4:
     images = images[0:4]
-  rating = get.get_movie_rating(slug)
 
   template = loader.get_template('movies/ifeellike.html')
   context = {
@@ -71,20 +70,24 @@ def ifeellike(request):
     'poster': poster,
     'trailer': trailer,
     'images': images,
-    'rating': rating,
     'slug': slug,
   }
   return HttpResponse(template.render(context, request))
 
-def getcastcrew(request):
+def getcastcrewrating(request):
   if request.method != "POST" or not request.POST.has_key('slug'):
     return redirect('/', permanent=True)
 
+  slug = request.POST['slug']
   cast = [get.get_people_image(x) for x in get.get_cast(slug)]
+  cast = cast[0:6] if len(cast)>6 else cast
   crew = [get.get_people_image(x) for x in get.get_crew(slug)]
+  crew = crew[0:6] if len(crew)>6 else crew
+  rating = get.get_movie_rating(slug)
   data = {
     'cast': cast,
     'crew': crew,
+    'rating': rating,
   }
 
-  return HttpResponse(data)
+  return HttpResponse(json.dumps(data))

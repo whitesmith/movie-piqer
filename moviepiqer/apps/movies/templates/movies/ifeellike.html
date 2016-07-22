@@ -32,16 +32,43 @@
       </div>
     </div>
   </div>
+  <div class="row">
+    <div class="col-sm-9" id="castcrew">
+      <div class="row" id="cast"></div>
+      <div class="row" id="crew"></div>
+    </div>
+    <div class="col-sm-3">
+      <div id="rating"></div>
+    </div>
+  </div>
+  <form id="hiddenCastForm" method="POST" action="{% url 'movies:getcastcrewrating' %}">
+    {% csrf_token %}
+  </form>
 </div>
-{{ cast }}
-{{ crew }}
-{{ rating }}
 {% endblock content %}
 
 {% block js.custom %}
 <script type="text/javascript">
   $(document).ready(function(){
-    $.post("{% url 'movies:getcastcrew' %}", {slug: {{ slug }}}, function(){})
+    $.post("{% url 'movies:getcastcrewrating' %}", {slug: "{{ slug }}", csrfmiddlewaretoken: $("#hiddenCastForm input[name=csrfmiddlewaretoken]").val()}, function(data){
+      $("#cast").append("<p class=\"lead\">Cast</p>");
+      for(i in data['cast']) {
+        $("#cast").append("<div class=\"col-sm-2\"><img class=\"img-responsive\" src=\"" + data['cast'][i] + "\" /></div>");
+      }
+
+      $("#crew").append("<p class=\"lead\">Crew</p>");
+      for(i in data['crew']) {
+        $("#crew").append("<div class=\"col-sm-2\"><img class=\"img-responsive\" src=\"" + data['crew'][i] + "\" /></div>");
+      }
+
+      console.log(data['rating']);
+      $("#rating").append("<p class=\"lead\">Rating</p>");
+      $("#rating").append("<p>Trakt.tv: "+data['rating'][0]+"</p>");
+      $("#rating").append("<p>Metacritic: "+data['rating'][1]+"</p>");
+      $("#rating").append("<p>IMDB: "+data['rating'][2]+"</p>");
+      $("#rating").append("<p>Rotten Tomatoes users: "+data['rating'][3]+"</p>");
+      $("#rating").append("<p>Rotten Tomatoes critics: "+data['rating'][4]+"</p>");
+    }, "json");
   });
 </script>
 {% endblock js.custom %}

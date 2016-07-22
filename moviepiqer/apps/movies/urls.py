@@ -7,5 +7,5 @@ urlpatterns = [
   url(r'^$', views.index, name='index'),
   url(r'^results$', views.results, name='results'),
   url(r'^ifeellike$', views.ifeellike, name='ifeellike'),
-  url(r'^getcastcrew$', views.getcastcrew, name='getcastcrew'),
+  url(r'^getcastcrewrating$', views.getcastcrewrating, name='getcastcrewrating'),
 ]
