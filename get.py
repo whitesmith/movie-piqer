@@ -231,7 +231,7 @@ def get_movie_rating(slug):
 	#print(imdb_id)
 	request = Request('http://www.omdbapi.com/?i='+imdb_id+'&r=json&tomatoes=true', headers=headers)
 	response_body = str(urlopen(request).read())
-	print(response_body)
+	#print(response_body)
 	meta_p = re.findall(r"""("Metascore":\"(?P<meta>[^"]*)\")""", response_body)
 	meta   = str(list(meta_p[0])[1])
 
@@ -312,7 +312,7 @@ def get_popular():
 	return movie_slugs
 
 
-print(get_movie_rating('terminator-genisys-2015'))
+#print(get_movie_rating('terminator-genisys-2015'))
 
 #print(get_in_theatres())
 #print(get_popular())
