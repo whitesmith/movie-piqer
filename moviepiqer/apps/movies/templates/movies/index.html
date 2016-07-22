@@ -2,58 +2,28 @@
 {% load static %}
 
 {% block css.custom %}
-<style type="text/css">
-  .content {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  #searchForm {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 60%;
-  }
-
-  #searchForm .form-group {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-  }
-
-  #searchForm .form-group select, #searchForm .form-group p, #searchForm .form-group input {
-    width: 33%;
-  }
-
-  #searchForm .form-group p {
-    text-align: center;
-  }
-
-  #buttons {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-    width: 20%;
-  }
-</style>
+<link type="text/css" href="{% static "movies/css/style1.css" %}" rel="stylesheet">
 {% endblock css.custom %}
 
 {% block content %}
 <div class="container">
-  <h2>Filter that shit</h2>
-  <div class="content">
+  <div id="landing" class="row" style="border-bottom: 0;">
+    <img id="circle1" src="{% static "movies/img/mp_circle.svg" %}"/>
+    <img id="logoletter1" src="{% static "movies/img/logo_moviepiqer_white.svg" %}"/>
+    <div id="arrow"> <a id='login' class="scroll" href="#content"> Let's Start!</a></div>
+  </div>
+  <div id="content">
+    <h1>How is the movie you want to see?</h1>
     <form id="searchForm">
     </form>
     <form id="hiddenForm" method="POST" action="{% url 'movies:results' %}">
       {% csrf_token %}
     </form>
-    <div id="buttons">
-      <button class="btn btn-default" id="addMoreFilters">Add filter</button>
-      <button class="btn btn-default" id="submitForm">Search</button>
+    <div class="row">
+      <div class="col-md-4">
+        <button class="btn" id="addMoreFilters" style="margin-right: 20px;">Add filter</button>
+        <button class="btn" id="submitForm">Search</button>
+      </div>
     </div>
   </div>
 </div>
@@ -62,38 +32,41 @@
 {% block js.custom %}
 <script type="text/javascript">
   $filterField = "\
-  <div class=\"form-group\">\
-    <select class=\"form-control\">\
-      <option></option>\
-      <option>Genre</option>\
-      <option>Rating</option>\
-      <option>Cast</option>\
-      <option>Crew</option>\
-    </select>\
-    <p class=\"form-control-static\">  </p>\
-    <input type=\"text\" class=\"form-control\" />\
+  <div class=\"row\">\
+    <div class=\"col-md-4\">\
+      <h3>Filter</h3>\
+      <select name=\"list\" class=\"form-control\">\
+        <option></option>\
+        <option>Genre</option>\
+        <option>Rating</option>\
+        <option>Cast</option>\
+        <option>Crew</option>\
+      </select>\
+    </div>\
+    <div class=\"col-md-4\"><h2>  </h2></div>\
+    <div class=\"col-md-4\"><h3>Your option</h3><input type=\"text\" class=\"form-control\" /></div>\
   </div>"
 
   function changeSpan(event) {
     $optionSelected = $("option:selected", $(event.target));
     if($optionSelected.text()=="Genre") {
-      $("p", $($(event.target).parent())).text(" may be ");
-      $("input", $($(event.target).parent())).attr({type:"text"});
-      $("input", $($(event.target).parent())).removeAttr("min");
-      $("input", $($(event.target).parent())).removeAttr("max");
+      $("h2", $($(event.target).parent().parent())).text(" may be ");
+      $("input", $($(event.target).parent().parent())).attr({type:"text"});
+      $("input", $($(event.target).parent().parent())).removeAttr("min");
+      $("input", $($(event.target).parent().parent())).removeAttr("max");
     } else if($optionSelected.text()=="Cast" || $optionSelected.text()=="Crew") {
-      $("p", $($(event.target).parent())).text(" includes ");
-      $("input", $($(event.target).parent())).attr({type:"text"});
-      $("input", $($(event.target).parent())).removeAttr("min");
-      $("input", $($(event.target).parent())).removeAttr("max");
+      $("h2", $($(event.target).parent().parent())).text(" includes ");
+      $("input", $($(event.target).parent().parent())).attr({type:"text"});
+      $("input", $($(event.target).parent().parent())).removeAttr("min");
+      $("input", $($(event.target).parent().parent())).removeAttr("max");
     } else if($optionSelected.text()=="Rating") {
-      $("p", $($(event.target).parent())).text(" bigger than ");
-      $("input", $($(event.target).parent())).attr({type:"number",min:"0.0",max:"100.0"});
+      $("h2", $($(event.target).parent().parent())).text(" bigger than ");
+      $("input", $($(event.target).parent().parent())).attr({type:"number",min:"0.0",max:"100.0"});
     } else {
-      $("p", $($(event.target).parent())).text("  ");
-      $("input", $($(event.target).parent())).attr({type:"text"});
-      $("input", $($(event.target).parent())).removeAttr("min");
-      $("input", $($(event.target).parent())).removeAttr("max");
+      $("h2", $($(event.target).parent().parent())).text("  ");
+      $("input", $($(event.target).parent().parent())).attr({type:"text"});
+      $("input", $($(event.target).parent().parent())).removeAttr("min");
+      $("input", $($(event.target).parent().parent())).removeAttr("max");
     }
   }
 
@@ -111,11 +84,16 @@
     $("select").change(function(event){
       changeSpan(event);
     });
+
+    $(".scroll").click(function(event){
+      event.preventDefault();
+      $('html,body').animate({scrollTop:$(this.hash).offset().top}, 800);
+     });
   })
 
   $("#submitForm").click(function(){
     $params = {genre: "", rating: 0.0, cast: "", crew: ""};
-    $("#searchForm .form-group").each(function(index,element){
+    $("#searchForm .row").each(function(index,element){
       switch($("option:selected", element).text()) {
         case "Genre":
           $val = $("input", element).val();

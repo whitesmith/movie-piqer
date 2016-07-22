@@ -2,31 +2,34 @@
 {% load static %}
 
 {% block css.custom %}
+<link type="text/css" href="{% static "movies/css/style1.css" %}" rel="stylesheet">
 {% endblock css.custom %}
 
 {% block content %}
-<div class="container">
-  <h2>Results</h2>
-  {% for result in results %}
-  <div class="panel panel-default">
-    <div class="panel-body">
-      <div class="row">
-        <div class="col-sm-4">
-          <img src="https://image.tmdb.org/t/p/w185/{{ result.poster_path }}" class="img-responsive center-block" />
-        </div>
-        <div class="col-sm-8">
-          <h3>{{ result.title }}</h3>
-          <p class="lead">Plot</p>
-          <p>{{ result.overview }}</p>
-          <br />
-          <p class="lead">Release date</p>
-          <p>{{ result.release_date }}</p>
-          <button class="btn btn-default accept pull-right" id="{{ result.id }}">Accept</button>
+<div class="container" style="padding-top: 0px;">
+  <div id="content">
+    <h1>You would like some of these</h1>
+    {% for result in results %}
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="row" style="padding-bottom: 40px;">
+          <div class="col-sm-4">
+            <img src="https://image.tmdb.org/t/p/w185/{{ result.poster_path }}" class="img-responsive center-block" />
+          </div>
+          <div class="col-sm-8">
+            <h3>{{ result.title }}</h3>
+            <br><br>
+            <p class="lead">Plot</p>
+            <p>{{ result.overview }}</p>
+            <br><br>
+            <p class="lead">Release date</p>
+            <p>{{ result.release_date }}</p>
+            <button class="btn btn-default accept pull-right" id="{{ result.id }}">Accept</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  {% endfor %}
+    {% endfor %}
 </div>
 <form id="hiddenForm" method="POST" action="{% url 'movies:ifeellike' %}">
   {% csrf_token %}
@@ -43,6 +46,13 @@
       field.attr('value',$(this).attr('id'));
       form.append(field);
       $(form).submit();
+  });
+
+  $(document).ready(function(){
+    $(".scroll").click(function(event){
+      event.preventDefault();
+      $('html,body').animate({scrollTop:$(this.hash).offset().top}, 800);
+     });
   });
 </script>
 {% endblock js.custom %}

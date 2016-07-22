@@ -2,28 +2,16 @@
 {% load static %}
 
 {% block css.custom %}
-<style type="text/css">
-#firstline, #secondline, #thirdline {
-  width: 100%;
-}
-.firstlineitem {
-  width: 33%;
-}
-.secondlineitem {
-  width: 20%;
-}
-.thirdlineitem {
-  width: 14%;
-}
-</style>
+<link type="text/css" href="{% static "movies/css/style1.css" %}" rel="stylesheet">
 {% endblock css.custom %}
 
 {% block content %}
-<div class="container">
-  <h2>{{ result.original_title }}</h2>
+<div class="container" style="padding-top: 0px;">
+  <div id="content">
+  <h1>{{ result.original_title }}</h1>
   <div class="row">
     <div class="col-sm-6" id="poster">
-      <img src="{{ poster }}" class="img-responsive center-block" />
+      <img src="{{ poster }}" class="img-responsive1 center-block" />
       <blockquote>
         <p>"{{ result.tagline }}"</p>
       </blockquote>
@@ -31,16 +19,16 @@
     <div class="col-sm-6">
       <p class="lead">Plot</p>
       <p>{{ result.overview }}</p>
-      <a class="btn btn-default center-block" href="http://www.imdb.com/title/{{ result.imdb_id }}" target="_blank" id="imdb">IMDB page</a>
       <p class="lead">Trailer</p>
       <div class="embed-responsive embed-responsive-16by9" id=trailer>
         <iframe class="embed-responsive-item" src="{{ trailer }}"></iframe>
       </div>
+      <a style="float: none; margin-bottom: 40px;" class="btn btn-default center-block" href="http://www.imdb.com/title/{{ result.imdb_id }}" target="_blank" id="imdb">IMDB page</a>
       <p class="lead">Featured images</p>
       <div class="row">
         {% for image in images %}
         <div class="col-sm-3">
-          <a href="https://image.tmdb.org/t/p/original{{ image.file_path }}" target="_blank"><img src="https://image.tmdb.org/t/p/w185{{ image.file_path }}" class="img-responsive center-block" /></a>
+          <a href="https://image.tmdb.org/t/p/original{{ image.file_path }}" target="_blank" class="hoverZoomLink"><img src="https://image.tmdb.org/t/p/w185{{ image.file_path }}" class="img-responsive1 center-block" /></a>
         </div>
         {% endfor %}
       </div>
@@ -64,21 +52,27 @@
   <form id="hiddenRelatedForm" method="POST" action="{% url 'movies:getrelated' %}">
     {% csrf_token %}
   </form>
+  </div>
 </div>
 {% endblock content %}
 
 {% block js.custom %}
 <script type="text/javascript">
   $(document).ready(function(){
+    $(".scroll").click(function(event){
+      event.preventDefault();
+      $('html,body').animate({scrollTop:$(this.hash).offset().top}, 800);
+     });
+
     $.post("{% url 'movies:getcastcrewrating' %}", {slug: "{{ slug }}", csrfmiddlewaretoken: $("#hiddenCastForm input[name=csrfmiddlewaretoken]").val()}, function(data){
       $("#cast").append("<p class=\"lead\">Cast</p>");
       for(i in data['cast']) {
-        $("#cast").append("<div class=\"col-sm-2\"><img class=\"img-responsive\" src=\"" + data['cast'][i] + "\" /></div>");
+        $("#cast").append("<div class=\"col-sm-2\"><img class=\"img-responsive1\" src=\"" + data['cast'][i] + "\" /></div>");
       }
 
       $("#crew").append("<p class=\"lead\">Crew</p>");
       for(i in data['crew']) {
-        $("#crew").append("<div class=\"col-sm-2\"><img class=\"img-responsive\" src=\"" + data['crew'][i] + "\" /></div>");
+        $("#crew").append("<div class=\"col-sm-2\"><img class=\"img-responsive1\" src=\"" + data['crew'][i] + "\" /></div>");
       }
 
       $("#rating").append("<p class=\"lead\">Rating</p>");
