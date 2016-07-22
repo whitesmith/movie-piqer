@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from django.template import loader
+from django.shortcuts import redirect
 import utils
 import json
 from datetime import datetime as dt
@@ -11,7 +12,7 @@ def index(request):
 
 def results(request):
   if request.method != "POST" or not request.POST.has_key('genre') or not request.POST.has_key('cast') or not request.POST.has_key('crew') or not request.POST.has_key('rating'):
-    return index(request)
+    return redirect('/', permanent=True)
 
   allGenres = utils.getAllGenres()['genres']
   genres=[]
@@ -38,9 +39,12 @@ def results(request):
   for x in tmp:
     if dt.strptime(x['release_date'],"%Y-%m-%d") <= dt.now():
       results.append(x)
+  if len(results) > 5:
+    results = results[0:5]
 
   template = loader.get_template('movies/results.html')
   context = {
     'results' : results,
+    'genres' : allGenres,
   }
   return HttpResponse(template.render(context, request))

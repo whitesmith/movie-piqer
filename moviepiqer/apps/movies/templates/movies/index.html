@@ -24,11 +24,11 @@
     width: 100%;
   }
 
-  #searchForm .form-group select, #searchForm .form-group span, #searchForm .form-group input {
+  #searchForm .form-group select, #searchForm .form-group p, #searchForm .form-group input {
     width: 33%;
   }
 
-  #searchForm .form-group span {
+  #searchForm .form-group p {
     text-align: center;
   }
 
@@ -70,22 +70,27 @@
       <option>Cast</option>\
       <option>Crew</option>\
     </select>\
-    <span>  </span>\
+    <p class=\"form-control-static\">  </p>\
     <input type=\"text\" class=\"form-control\" />\
   </div>"
 
   function changeSpan(event) {
     $optionSelected = $("option:selected", $(event.target));
-    if($optionSelected.text()=="Genre" || $optionSelected.text()=="Cast" || $optionSelected.text()=="Crew") {
-      $("span", $($(event.target).parent())).text(" includes ");
+    if($optionSelected.text()=="Genre") {
+      $("p", $($(event.target).parent())).text(" may be ");
+      $("input", $($(event.target).parent())).attr({type:"text"});
+      $("input", $($(event.target).parent())).removeAttr("min");
+      $("input", $($(event.target).parent())).removeAttr("max");
+    } else if($optionSelected.text()=="Cast" || $optionSelected.text()=="Crew") {
+      $("p", $($(event.target).parent())).text(" includes ");
       $("input", $($(event.target).parent())).attr({type:"text"});
       $("input", $($(event.target).parent())).removeAttr("min");
       $("input", $($(event.target).parent())).removeAttr("max");
     } else if($optionSelected.text()=="Rating") {
-      $("span", $($(event.target).parent())).text(" bigger than ");
+      $("p", $($(event.target).parent())).text(" bigger than ");
       $("input", $($(event.target).parent())).attr({type:"number",min:"0.0",max:"100.0"});
     } else {
-      $("span", $($(event.target).parent())).text("  ");
+      $("p", $($(event.target).parent())).text("  ");
       $("input", $($(event.target).parent())).attr({type:"text"});
       $("input", $($(event.target).parent())).removeAttr("min");
       $("input", $($(event.target).parent())).removeAttr("max");

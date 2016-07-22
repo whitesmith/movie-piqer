@@ -6,8 +6,25 @@
 
 {% block content %}
 <div class="container">
+  <h2>Results</h2>
   {% for result in results %}
-  <div class="panel">{{ result.title }}</div>
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-sm-4">
+          <img src="https://image.tmdb.org/t/p/w185/{{ result.poster_path }}" class="img-responsive center-block" />
+        </div>
+        <div class="col-sm-8">
+          <h3>{{ result.title }}</h3>
+          <p class="lead">Plot</p>
+          <p>{{ result.overview }}</p>
+          <br />
+          <p class="lead">Release date</p>
+          <p>{{ result.release_date }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
   {% endfor %}
 </div>
 {% endblock content %}
