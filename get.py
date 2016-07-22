@@ -1,5 +1,6 @@
 from urllib.request import Request, urlopen
 import re
+import matplotlib.pyplot as plt
 
 headers = {
   'Content-Type': 'application/json',
@@ -14,21 +15,20 @@ def get_related(slug):
 
 	related = re.findall(r"""("title":"(?P<title>[^"]*)")[^}]*slug":"(?P<sl>[^"]*)"[^}]*imdb":"(?P<id>[^"]*)\"""", response_body)
 
-	all_movies = []
-	all_counts = []
-	all_slugs  = []
+	all_movies, all_counts, all_slugs = [], [], []
 
 	for movies in related:
 		movie_title = list(movies)[1]
 		movie_slug = list(movies)[2]
 		movie_id = list(movies)[3]
-		if str(movie_title) not in all_movies:
+		
+		if str(movie_title) in all_movies:
+			idx = all_movies.index(str(movie_title))
+			all_counts[idx] = all_counts[idx]+1
+		else:
 			all_movies.append(str(movie_title))
 			all_slugs.append(str(movie_slug))
 			all_counts.append(1)
-		else:
-			idx = all_movies.index(str(movie_title))
-			all_counts[idx] = all_counts[idx]+1
 
 		request = Request('https://api.trakt.tv/movies/'+movie_slug+'/related', headers=headers)
 		response_body = str(urlopen(request).read())
@@ -47,6 +47,8 @@ def get_related(slug):
 				idx = all_movies.index(movie_title1)
 				all_counts[idx] = all_counts[idx]+1
 
+	
+	# Add cast scoring
 	cast = get_cast(slug)
 
 	for people_slug in cast:
@@ -57,6 +59,7 @@ def get_related(slug):
 				idx = all_movies.index(movie)
 				all_counts[idx] = all_counts[idx]+1
 
+	# Add genre scoring
 	for m in range(len(all_slugs)):
 		movie_slug = all_slugs[m]
 		genre_comp = get_genres(movie_slug)
@@ -68,7 +71,16 @@ def get_related(slug):
 		all_counts[m] = all_counts[m] + g
 	
 	all_counts, all_movies, all_slugs = zip(*sorted(zip(all_counts, all_movies, all_slugs)))
-	all_counts, all_movies, all_slugs = all_counts[::-1], all_movies[::-1], all_slugs[::-1]
+	all_counts, all_movies, all_slugs = list(all_counts[::-1]), list(all_movies[::-1]), list(all_slugs[::-1])
+
+	# Add name scoring
+
+
+	# Remove queried movie from lists
+	idx = all_slugs.index(slug)
+	del all_counts[idx]
+	del all_movies[idx]
+	del all_slugs[idx]
 
 	#for i in range(len(all_movies)):
 	#	print('['+str(all_counts[i])+']: '+str(all_movies[i]))
@@ -163,7 +175,9 @@ def imdb2slug(imdb):
 	return slug
 
 def get_genres(slug):
+	print('https://api.trakt.tv/movies/'+slug+'?extended=full')
 	request = Request('https://api.trakt.tv/movies/'+slug+'?extended=full', headers=headers)
+	#print(urlopen(request).url)
 	response_body = str(urlopen(request).read())
 
 	genres_p = re.findall(r"""\"genres\":\[([^\]]*)\]""", response_body)
@@ -204,23 +218,117 @@ def get_movie_trailer(slug):
 
 def get_movie_rating(slug):
 
+	# Trakt
 	request = Request('https://api.trakt.tv/movies/'+slug+'/ratings', headers=headers)
 	response_body = str(urlopen(request).read())
 	#print(response_body)
-	rating_p = re.findall(r"""("rating":(?P<rating>[^"]*),)""", response_body)
-	#print(rating_p)
-	rating   = str(list(rating_p[0])[1])
-	return rating
+	trakt_p = re.findall(r"""("rating":(?P<trakt>[^"]*),)""", response_body)
+	#print(trakt_p)
+	trakt   = str(list(trakt_p[0])[1])
 
+	# Metacritic
+	imdb_id = slug2imdb(slug, 'movie')
+	#print(imdb_id)
+	request = Request('http://www.omdbapi.com/?i='+imdb_id+'&r=json', headers=headers)
+	response_body = str(urlopen(request).read())
+	#print(response_body)
+	meta_p = re.findall(r"""("Metascore":\"(?P<meta>[^"]*)\")""", response_body)
+	#print(meta_p)
+	meta   = str(list(meta_p[0])[1])
+
+
+	# IMDB
+	imdb_p = re.findall(r"""("imdbRating":\"(?P<imdb>[^"]*)\")""", response_body)
+	#print(trakt_p)
+	imdb   = str(list(imdb_p[0])[1])
+
+
+	return trakt, meta, imdb
+
+def get_genre_list():
+
+	request = Request('https://api.trakt.tv/genres/movies', headers=headers)
+	response_body = str(urlopen(request).read())
+	genres_p = re.findall(r"""("name":\"(?P<genre>[^"]*)\")""", response_body)
+	
+	genres_list = []
+	for genre in genres_p:
+		genres_list.append(str(list(genre)[1]))
+
+	return genres_list
+
+def get_random_slug():
+	request = Request('http://www.imdb.com/random/title', headers=headers)
+	url = urlopen(request).url
+	imdb_p = re.findall(r"""(/title/(?P<genre>[^\/]*)\/)""", url)
+	#print(imdb_p)
+	imdb = str(list(imdb_p[0])[1])
+
+	slug = imdb2slug(imdb)
+
+	return slug
+
+
+def get_genre_ratings_stats(slug_list):
+
+	r1, r2, r3 = [], [], []
+	i=0
+	
+	for slug in slug_list:
+		r = list(get_movie_rating(slug))
+		r1.append(r[0])
+		r2.append(r[1])
+		r3.append(r[2])
+
+	return r1, r2, r3
+
+def get_in_theatres():
+	request = Request('https://api.trakt.tv/movies/boxoffice', headers=headers)
+	response_body = str(urlopen(request).read())
+	movies = re.findall(r"""("slug":"(?P<slug>[^"]*)")""", response_body)
+
+	movie_slugs =[]
+	for movie in movies:
+		movie_slugs.append(str(list(movie)[1]))
+
+	return movie_slugs
+		
+def get_popular():
+	request = Request('https://api.trakt.tv/movies/popular', headers=headers)
+	response_body = str(urlopen(request).read())
+	movies = re.findall(r"""("slug":"(?P<slug>[^"]*)")""", response_body)
+
+	movie_slugs =[]
+	for movie in movies:
+		movie_slugs.append(str(list(movie)[1]))
+
+	return movie_slugs
+
+#print(get_in_theatres())
+#print(get_popular())
+
+#r1, r2, r3 = get_genre_ratings_stats('action')
+#print(len(r1),len(r2),len(r3))
+# n, bins, patches = plt.hist(r1, 50, normed=1, facecolor='green', alpha=0.75)
+# plt.show()
+# n, bins, patches = plt.hist(r2, 50, normed=1, facecolor='green', alpha=0.75)
+# plt.show()
+# n, bins, patches = plt.hist(r3, 50, normed=1, facecolor='green', alpha=0.75)
+# plt.show()
+
+
+#print(get_random_slug())
+
+#print(get_genre_list())
 
 # ---- Filmes relacionados ---- 
-# all_counts, all_slugs, all_movies = get_related('blade-runner-1982')
+# all_counts, all_slugs, all_movies = get_related('terminator-genisys-2015')
 
 # for i in range(len(all_movies)):
 # 	print('['+str(all_counts[i])+']: '+str(all_movies[i])+' ('+str(all_slugs[i])+')')
 
 # ---- Movie rating
-#print(get_movie_rating('insurgent-2015'))
+# print(get_movie_rating('insurgent-2015'))
 
 # ---- Cast de um filme ---- 
 # cs = get_cast('insurgent-2015')
@@ -229,8 +337,8 @@ def get_movie_rating(slug):
 #  	print(slug2imdb(people, 'people'))
 
 # ---- Movie genre ---- 
-#genres = get_genres('insurgent-2015')
-#print(genres)
+# genres = get_genres('insurgent-2015')
+# print(genres)
 
 # ---- Movie poster/Person headshot ---- 
 #print(get_poster_image('insurgent-2015'))
