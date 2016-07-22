@@ -1,0 +1,465 @@
+h1{
+    color: #fff;
+    font-family: 'Raleway', sans-serif;
+    margin-bottom: 100px;
+    font-size: 46px;
+    font-weight: 600;
+}
+
+h2{
+    color: #fff;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 600;
+}
+
+h3{
+    color: #fff;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+h4{
+    color: #fff;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+p{
+    color: #fff;
+    font-family: 'Raleway', sans-serif;
+    font-size: 14px;
+    font-weight: 100;
+}
+
+a{
+    font-family: 'Raleway', sans-serif;
+}
+
+
+/*------------------------------
+----------BODY------------------
+------------------------------*/
+
+
+body{
+    background: #000;
+    background: -webkit-linear-gradient(45deg, #000, #222);
+    background: -o-linear-gradient(45deg, #000, #222);
+    background: -moz-linear-gradient(45deg, #000, #222);
+    background-size: 100% 100%;
+}
+
+
+
+/*------------------------------
+----------NAVBAR----------------
+------------------------------*/
+
+.navbar{
+    background: rgba(0,0,0,0);
+    border: 0;
+    padding-top: 10px;
+}
+
+.navbar-brand{
+    margin-left: 20px;
+}
+
+
+#circle{
+    width: 10%;
+    margin-right: 0px;
+    padding-right: 0px;
+    
+    -webkit-transition: transform 1s;
+    transition: transform 1s;
+    animation: mymove 1s, mymoveN 1s, mymoveMS 1s;
+    float: left;
+}
+
+#logoletter {
+    width: 56%;
+    margin-top: 5%;
+    margin-left: 5%;
+    padding-left: 0px;
+    margin-right: 0px;
+    padding-right: 0px;
+    float: left;
+}
+
+
+/*------------------------------
+----------LANDING PAGE----------
+------------------------------*/
+
+
+#circle1{
+    width: 14%;
+    margin-right: 0px;
+    padding-right: 0px;
+    
+    -webkit-transition: transform 1s;
+    transition: transform 1s;
+    animation: mymove 1s, mymoveN 1s, mymoveMS 1s;
+}
+
+#logoletter1 {
+    width: 80%;
+    margin-top: 8%;
+    margin-left: 5%;
+    padding-left: 0px;
+    margin-right: 0px;
+    padding-right: 0px;
+
+}
+
+
+
+
+
+
+
+#landing{
+    margin: auto;
+    width: 90%;
+    margin-top: 5%;
+    margin-bottom: 30%;
+
+}
+
+
+#arrow{
+    width: 100%;
+    margin-top: 10%;
+    
+}
+
+#arrow a{
+    font-size: 20px;
+    color: #fff;
+    display: inline-block;
+    width: 100%;
+    text-align:center;
+    border: 1;
+    border-color: #fff;
+}
+
+#arrow a:hover{
+    color: -webkit-linear-gradient(45deg, #9E00FF, #00FF63);
+}
+
+
+#circle:hover, #circle1:hover{
+    -ms-transform: rotate(180deg); /* IE 9 */
+    -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
+    transform: rotate(180deg);
+}
+
+.navbar svg {
+  fill: #fff;
+}
+
+.container{
+    background: rgba(0,0,0,0);
+    padding-top: 50px;
+}
+
+
+
+#arrow a {
+    display: block;
+    font-family: 'Raleway', sans-serif;
+    background: #000;
+    color: #FFFFFF;
+    font-size: 15px;
+    padding-top: 12px;
+    border: solid #FFFFFF 3px;
+    text-decoration: none;
+    letter-spacing: 2px;
+    margin: auto;
+    width: 150px;
+    height: 50px;
+}
+
+#arrow a:hover{
+    
+    border: 3px solid;
+  -moz-border-image: -moz-linear-gradient(left, #9E00FF 0%, #00FF63 100%);
+  -webkit-border-image: -webkit-linear-gradient(left, #9E00FF 0%, #00FF63 100%);
+  border-image: linear-gradient(left, #9E00FF 0%, #00FF63 100%);
+  border-image-slice: 1;
+    background: #111;
+    
+}
+
+
+
+/*------------------------------
+-------------CONTENT------------
+------------------------------*/
+
+
+#content{
+    margin-bottom: 300px;
+    padding-top: 40px;
+}
+
+
+.col-md-4 h2{
+    text-align: center;
+    margin: auto;
+    background:  -webkit-linear-gradient(45deg, #9E00FF 0%, #00FF63 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 2px;
+    padding-top: 50px;
+    
+}
+
+.col-md-4{
+    margin: 0px;
+    height: 100%;
+    margin-bottom: 40px;
+}
+
+.row{
+    margin-bottom: 40px;
+    border-bottom: 3px solid;
+}
+
+
+.col-md-4 h3{
+    text-align: left;
+    margin-top: 10px;
+    background:  -webkit-linear-gradient(left, #9E00FF 0%, #00FF63 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 2px;
+    
+}
+
+
+
+
+
+/*------------------------------
+-----------TEXT INPUTS----------
+------------------------------*/
+
+input[type=text] {
+    
+    border: 3px solid;
+    
+  -moz-border-image: -moz-linear-gradient(left, #9E00FF 0%, #00FF63 100%);
+    
+  -webkit-border-image: -webkit-linear-gradient(left, #9E00FF 0%, #00FF63 100%);
+    
+  border-image: linear-gradient(left, #9E00FF 0%, #00FF63 100%);
+    
+    border-image-slice: 1;
+    background: rgba(0,0,0,0);
+    padding: 10px;
+    width: 100%;
+    font-family: 'Raleway', sans-serif;
+    font-size: 30px;
+    color: #fff;
+}
+
+
+
+select {
+    
+    border: 3px solid;
+    
+  -moz-border-image: -moz-linear-gradient(left, #9E00FF 0%, #00FF63 100%);
+    
+  -webkit-border-image: -webkit-linear-gradient(left, #9E00FF 0%, #00FF63 100%);
+    
+  border-image: linear-gradient(left, #9E00FF 0%, #00FF63 100%);
+    
+    border-image-slice: 1;
+    background: rgba(0,0,0,0);
+    padding: 10px;
+    width: 100%;
+    font-family: 'Raleway', sans-serif;
+    font-size: 30px;
+    color: #fff;
+}
+
+option {
+   -webkit-appearance: none;
+   -moz-appearance: none;
+   appearance: none;
+}
+
+option {
+    background: #000;
+}
+
+
+
+
+/*------------------------------
+-------------RESULTS------------
+------------------------------*/
+
+.panel-body, .panel, .panel-default{
+    background: rgba(0,0,0,0);
+    border: 0;
+}
+
+.panel{
+    padding-bottom: 40px;
+}
+
+
+#movie_poster img{
+    float:left;
+    
+}
+
+
+.panel-body h3{
+    font-size: 30px;
+    color: #fff;
+    background:  -webkit-linear-gradient(45deg, #9E00FF 0%, #00FF63 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 1px;
+    padding-top: 0px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.panel-body img{
+    float: left;
+    width: 70%;
+}
+
+
+.btn {
+    display: block;
+    font-family: 'Raleway', sans-serif;
+    background: #000;
+    color: #FFFFFF;
+    font-size: 15px;
+
+    border: solid #FFFFFF 3px;
+    text-decoration: none;
+    letter-spacing: 2px;
+    margin: auto;
+    padding: 12px;
+    border-radius: 0;
+    float: left;
+}
+
+.btn:hover{
+    color: #fff;
+    border: 3px solid;
+  -moz-border-image: -moz-linear-gradient(left, #9E00FF 0%, #00FF63 100%);
+  -webkit-border-image: -webkit-linear-gradient(left, #9E00FF 0%, #00FF63 100%);
+  border-image: linear-gradient(left, #9E00FF 0%, #00FF63 100%);
+  border-image-slice: 1;
+    background: #111;
+    
+}
+
+
+
+/*------------------------------
+----------MOVIE PAGE------------
+------------------------------*/
+
+
+.img-responsive{
+    width: 20%;
+    float: left;
+    margin: 2.5%;
+}
+
+.img-responsive1{
+    width: 100%;
+    float: left;
+}
+
+
+/*------------------------------
+----------ANIMATIONS------------
+------------------------------*/
+
+
+@keyframes mymove {
+    from {-webkit-transform: rotate(180deg);}
+    to {-webkit-transform: rotate(0deg);}
+}
+
+@keyframes mymoveN {
+    from {transform: rotate(180deg);}
+    to {transform: rotate(0deg);}
+}
+
+@keyframes mymoveMS {
+    from {-ms-transform: rotate(180deg);}
+    to {-ms-transform: rotate(0deg);}
+}
+
+
+/*------------------------------
+-------------FOOTER-------------
+------------------------------*/
+
+footer{
+    margin-bottom: 20px;
+}
+
+footer p{
+    letter-spacing: 1px;
+    background:  -webkit-linear-gradient(left, #9E00FF 0%, #00FF63 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+
+/*------------------------------
+---------MEDIA QUERIES----------
+------------------------------*/
+
+
+
+
+@media screen and (max-width: 767px) {
+    #circle1{
+        width: 100%;
+        margin: 0px;
+    }
+    
+    #logoletter1 {
+        width: 100%;
+        margin: 40px 0 40px 0;
+    }
+    
+    #content{
+    padding-top: 10px;
+}
+
+    .col-md-4 h2{
+    padding-top: 0px;
+}
+    
+    .row{
+        margin-bottom: 90px;
+    }
+    
+    .navbar-brand{
+    margin-left: 0px;
+    }
+    
+
+    
+    
+
+}
+
+
