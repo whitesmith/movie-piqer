@@ -1,6 +1,9 @@
 FROM python:2.7
 
 ENV PYTHONUNBUFFERED 1
+
+RUN apt-get update -qq && apt-get install -y pkg-config libfreetype6-dev
+
 ENV CODE /movie-piqer
 
 RUN mkdir $CODE

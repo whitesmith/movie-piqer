@@ -11,13 +11,13 @@
     <div class="col-sm-6" id="poster">
       <img src="{{ poster }}" class="img-responsive center-block" />
       <blockquote>
-        <p>{{ result.tagline }}</p>
+        <p>"{{ result.tagline }}"</p>
       </blockquote>
     </div>
     <div class="col-sm-6">
       <p class="lead">Plot</p>
       <p>{{ result.overview }}</p>
-      <a class="btn btn-default" href="http://www.imdb.com/title/{{ result.imdb_id }}" target="_blank" id="imdb">IMDB page</a>
+      <a class="btn btn-default center-block" href="http://www.imdb.com/title/{{ result.imdb_id }}" target="_blank" id="imdb">IMDB page</a>
       <p class="lead">Trailer</p>
       <div class="embed-responsive embed-responsive-16by9" id=trailer>
         <iframe class="embed-responsive-item" src="{{ trailer }}"></iframe>
@@ -25,15 +25,23 @@
       <p class="lead">Featured images</p>
       <div class="row">
         {% for image in images %}
-        <div class="col-sm-6">
-          <img src="https://image.tmdb.org/t/p/w185{{ image.file_path }}" class="img-responsive block-center" />
+        <div class="col-sm-3">
+          <a href="https://image.tmdb.org/t/p/original{{ image.file_path }}" target="_blank"><img src="https://image.tmdb.org/t/p/w185{{ image.file_path }}" class="img-responsive center-block" /></a>
         </div>
         {% endfor %}
       </div>
     </div>
   </div>
 </div>
+{{ cast }}
+{{ crew }}
+{{ rating }}
 {% endblock content %}
 
 {% block js.custom %}
+<script type="text/javascript">
+  $(document).ready(function(){
+    $.post("{% url 'movies:getcastcrew' %}", {slug: {{ slug }}}, function(){})
+  });
+</script>
 {% endblock js.custom %}
