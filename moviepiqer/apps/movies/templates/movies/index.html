@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css.custom %}
+<style type="text/css">
+  .content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  #searchForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 60%;
+  }
+
+  #searchForm .form-group {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
+  #searchForm .form-group select, #searchForm .form-group span, #searchForm .form-group input {
+    width: 33%;
+  }
+
+  #searchForm .form-group span {
+    text-align: center;
+  }
+
+  #buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 20%;
+  }
+</style>
+{% endblock css.custom %}
+
+{% block content %}
+<div class="container">
+  <h2>Filter that shit</h2>
+  <div class="content">
+    <form id="searchForm">
+    </form>
+    <form id="hiddenForm" method="POST" action="{% url 'movies:results' %}">
+      {% csrf_token %}
+    </form>
+    <div id="buttons">
+      <button class="btn btn-default" id="addMoreFilters">Add filter</button>
+      <button class="btn btn-default" id="submitForm">Search</button>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block js.custom %}
+<script type="text/javascript">
+  $filterField = "\
+  <div class=\"form-group\">\
+    <select class=\"form-control\">\
+      <option></option>\
+      <option>Genre</option>\
+      <option>Rating</option>\
+      <option>Cast</option>\
+      <option>Crew</option>\
+    </select>\
+    <span>  </span>\
+    <input type=\"text\" class=\"form-control\" />\
+  </div>"
+
+  function changeSpan(event) {
+    $optionSelected = $("option:selected", $(event.target));
+    if($optionSelected.text()=="Genre" || $optionSelected.text()=="Cast" || $optionSelected.text()=="Crew") {
+      $("span", $($(event.target).parent())).text(" includes ");
+      $("input", $($(event.target).parent())).attr({type:"text"});
+      $("input", $($(event.target).parent())).removeAttr("min");
+      $("input", $($(event.target).parent())).removeAttr("max");
+    } else if($optionSelected.text()=="Rating") {
+      $("span", $($(event.target).parent())).text(" bigger than ");
+      $("input", $($(event.target).parent())).attr({type:"number",min:"0.0",max:"100.0"});
+    } else {
+      $("span", $($(event.target).parent())).text("  ");
+      $("input", $($(event.target).parent())).attr({type:"text"});
+      $("input", $($(event.target).parent())).removeAttr("min");
+      $("input", $($(event.target).parent())).removeAttr("max");
+    }
+  }
+
+  $("#addMoreFilters").click(function(){
+    if($("#searchForm").children().length<10){
+      $("#searchForm").append($filterField);
+      $("select").change(function(event){
+        changeSpan(event);
+      });
+    }
+  });
+
+  $(document).ready(function() {
+    $("#searchForm").append($filterField);
+    $("select").change(function(event){
+      changeSpan(event);
+    });
+  })
+
+  $("#submitForm").click(function(){
+    $params = {genre: "", rating: 0.0, cast: "", crew: ""};
+    $("#searchForm .form-group").each(function(index,element){
+      switch($("option:selected", element).text()) {
+        case "Genre":
+          $val = $("input", element).val();
+          if($val.length != 0) {
+            $params['genre'] += $params['genre'].length==0 ? $val : ("|" + $val);
+          }
+          break;
+        case "Rating":
+          $val = $("input", element).val();
+          if($val/10.0 > $params['rating']) {
+            $params['rating'] = $val/10.0;
+          }
+          break;
+        case "Cast":
+          $val = $("input", element).val();
+          if($val.length != 0) {
+            $params['cast'] += $params['cast'].length==0 ? $val : ("," + $val);
+          }
+          break;
+        case "Crew":
+          $val = $("input", element).val();
+          if($val.length != 0) {
+            $params['crew'] += $params['crew'].length==0 ? $val : ("," + $val);
+          }
+          break;
+      }
+    })
+    var form = $("#hiddenForm");
+
+    $.each( $params, function( key, value ) {
+        var field = $('<input></input>');
+
+        field.attr("type", "hidden");
+        field.attr("name", key);
+        field.attr("value", value);
+
+        form.append(field);
+    });
+    $(form).submit();
+  })
+</script>
+{% endblock js.custom %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css.custom %}
+{% endblock css.custom %}
+
+{% block content %}
+<div class="container">
+  {% for result in results %}
+  <div class="panel">{{ result.title }}</div>
+  {% endfor %}
+</div>
+{% endblock content %}
+
+{% block js.custom %}
+
+{% endblock js.custom %}
